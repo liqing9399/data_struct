@@ -1,4 +1,4 @@
-#include "mathFunctions.hpp"
+#include "./math/mathFunctions.hpp"
 
 int main(int argc, char *argv[])
 {
