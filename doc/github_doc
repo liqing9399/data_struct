@@ -1,0 +1,4 @@
+1.创建账号
+2.本地创建ssh key
+  $:ssh-keygen -t -C "your_email@youremail.com"
+3.

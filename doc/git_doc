@@ -1,0 +1,8 @@
+1.初始化仓库
+  git init 
+2.设置全局变量
+  git config --gloaba
+  git config --global user.name "liqing"
+  git config --global user.email "362085095@qq.com"
+  // 设置commit mesege 编辑器位vim
+  git config --global core.editor vim
