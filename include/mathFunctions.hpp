@@ -1,8 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #ifndef TEST_MATHFUNCTIONS_HPP
 #define TEST_MATHFUNCTIONS_HPP
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "common.hpp"
 
 
 /**
