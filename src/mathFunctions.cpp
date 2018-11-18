@@ -1,4 +1,4 @@
-#include "mathFunctions.hpp"
+#include "../include/mathFunctions.hpp"
 
 
 

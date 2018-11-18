@@ -9,10 +9,14 @@ project (Demo1)
 aux_source_directory(. DIR_SRCS)
 
 #添加 math 子目录
-add_subdirectory(math)
+#add_subdirectory(math)
+include_directories(./include)
 
 #指定生成目标
 add_executable(run_test ${DIR_SRCS})
+
+aux_source_directory(./src DIR_LIB_SRC)
+add_library(mathFunctions ${DIR_LIB_SRC})
 
 #添加链接库
 #表明可执行文件run_test 需要链接一个名为 mathFunctions的链接库
