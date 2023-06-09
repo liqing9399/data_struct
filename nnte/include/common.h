@@ -3,7 +3,7 @@
 #author        : litao
 #e-mail        : Tao.Li@streamcomputing.com
 #create time   : 2023-05-26 15:26:26
-#last modified : 2023-06-06 10:48:50
+#last modified : 2023-06-08 15:10:50
 #description   : NA
 ***************************************************/
 
@@ -151,8 +151,9 @@ class Shape {
 
   int GetDim(Axis dim) {
     if (layout_ == Layout::LNONE) {
-      LOG(W) << "this tensor layout is Layout::LNONE, it's can not be use Axis to get dimension number. Axis: "
+      LOG(E) << "this tensor layout is Layout::LNONE, it's can not be use Axis to get dimension number. Axis: "
              << (int)dim;
+      throw "error";
     }
     int di = axis_to_di[layout_][dim];
     return GetDim(di);
@@ -164,7 +165,7 @@ class Shape {
 
   int GetDimNum() { return dims_.size(); }
 
-  int GetLastDimCount() {return dims_[(dims_.size() - 1)];};
+  int GetLastDim() {return dims_[(dims_.size() - 1)];};
 
   int GetExcludeLastDimCount() {return std::accumulate(dims_.begin(), dims_.end() - 1, 1, std::multiplies<int>());};
 
@@ -219,7 +220,7 @@ class Tensor {
 
   Tensor(Shape &s,
          Datatype dt = Datatype::FLOAT16,
-         std::string tensor_name = "")
+         const std::string & tensor_name = "")
       : shape_(s), dt_(dt), tensor_name_(tensor_name) {
   }
 
@@ -245,6 +246,7 @@ class Tensor {
     // os.close();
   }
 
+  int GetDataWidths() { return SizeOf(dt_); };
   Datatype GetDtype() { return dt_; };
   Shape GetShape() { return shape_; };
   void *GetDevDdr() { return dev_ddr_; };
@@ -274,12 +276,32 @@ struct CycleCounter {
     cycles_l12llb(0), cycles_l12l1(0),
     cycles_dma(0), cycles_mte(0), cycles_compute(0),
     cycles_bottleneck(0) {};
+  CycleCounter operator+(const CycleCounter &r) {
+    CycleCounter res;
+    res.cycles_mme          =  this->cycles_mme          +  r.cycles_mme          ;
+    res.cycles_vme          =  this->cycles_vme          +  r.cycles_vme          ;
+    res.cycles_gdram2llb    =  this->cycles_gdram2llb    +  r.cycles_gdram2llb    ;
+    res.cycles_gdram2l1     =  this->cycles_gdram2l1     +  r.cycles_gdram2l1     ;
+    res.cycles_llb2gdram    =  this->cycles_llb2gdram    +  r.cycles_llb2gdram    ;
+    res.cycles_l12gdram     =  this->cycles_l12gdram     +  r.cycles_l12gdram     ;
+    res.cycles_gdram2gdram  =  this->cycles_gdram2gdram  +  r.cycles_gdram2gdram  ;
+    res.cycles_llb2l1       =  this->cycles_llb2l1       +  r.cycles_llb2l1       ;
+    res.cycles_llb2l1_b     =  this->cycles_llb2l1_b     +  r.cycles_llb2l1_b     ;
+    res.cycles_llb2llb      =  this->cycles_llb2llb      +  r.cycles_llb2llb      ;
+    res.cycles_l12llb       =  this->cycles_l12llb       +  r.cycles_l12llb       ;
+    res.cycles_l12l1        =  this->cycles_l12l1        +  r.cycles_l12l1        ;
+    res.cycles_dma          =  this->cycles_dma          +  r.cycles_dma          ;
+    res.cycles_mte          =  this->cycles_mte          +  r.cycles_mte          ;
+    res.cycles_compute      =  this->cycles_compute      +  r.cycles_compute      ;
+    res.cycles_bottleneck   =  this->cycles_bottleneck   +  r.cycles_bottleneck;
+    return res;
+  };
 
   void PrintInfo(std::string &op_name) {
     UpdateBottleneck();
     std::stringstream infos;
     infos << op_name << "\n";
-    #define PSTR(stream, val) stream << #val << ": " << val  << "\n"
+    #define PSTR(stream, val) stream << #val << ": " << val << "(" << (float)val/1000/1000<< "ms)" << "\n"
     PSTR(infos, cycles_mme);
     PSTR(infos, cycles_vme);
     PSTR(infos, cycles_gdram2llb);
@@ -351,9 +373,9 @@ typedef enum class OperandType {
 
 class BaseLayer : public std::enable_shared_from_this<BaseLayer> {
  public:
-  BaseLayer(std::vector<Sptr<Tensor>> ins, std::vector<Sptr<Tensor>> outs, std::string &name) :
+  BaseLayer(std::vector<Sptr<Tensor>> &&ins, std::string &name) :
     /*inputs_(ins), outputs_(outs), */
-    opds_({{OperandType::INPUT, ins}, {OperandType::OUTPUT, outs}}), name_(name)/*, workspace_bytes_(0), d_workspace_(nullptr)*/{};
+    opds_({{OperandType::INPUT, ins}, {OperandType::OUTPUT, {}}}), name_(name)/*, workspace_bytes_(0), d_workspace_(nullptr)*/{};
   virtual ~BaseLayer(){};
 
 
@@ -362,10 +384,13 @@ class BaseLayer : public std::enable_shared_from_this<BaseLayer> {
   std::vector<Sptr<Tensor>> GetInputs() { return GetOperands(OperandType::INPUT); };
   std::vector<Sptr<Tensor>> GetOutputs() { return GetOperands(OperandType::OUTPUT); };
   std::vector<Sptr<Tensor>> GetOperands(OperandType opd_type) { return opds_[opd_type]; };
+  Sptr<Tensor> GetInput(int index) { return GetInputs()[index]; };
+  Sptr<Tensor> GetOutput(int index) { return GetOutputs()[index]; };
 
   const std::string & GetLayerName() {return name_;};
 
-  virtual uint64_t EvaluateCycle() = 0;
+  virtual uint64_t ForwardEvalCycle() = 0;
+  virtual uint64_t BackwardEvalCycle() = 0;
   virtual void Check() = 0;
 
   void CheckOperandNum(OperandType opd_type, int number, std::function<int(int, int)> comp) {
@@ -381,6 +406,7 @@ class BaseLayer : public std::enable_shared_from_this<BaseLayer> {
   std::map<OperandType, std::vector<Sptr<Tensor>> > opds_;
   std::string name_;
   CycleCounter perf_;
+  CycleCounter bwd_perf_;
   std::stringstream infos_;
   // int workspace_bytes_;
   // void *d_workspace_;

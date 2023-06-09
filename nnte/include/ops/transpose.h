@@ -3,7 +3,7 @@
 #author        : litao
 #e-mail        : Tao.Li@streamcomputing.com
 #create time   : 2023-06-01 16:28:12
-#last modified : 2023-06-05 20:01:10
+#last modified : 2023-06-08 11:34:40
 #description   : NA
 ***************************************************/
 #ifndef NNTE_INCLUDE_OPS_TRANSPOSE_U_
@@ -40,7 +40,7 @@ class TransposeLayer : public BaseLayer {
   }
 
   TransposeLayer(Sptr<Tensor> in, TransParam &param, std::string &name) :
-    BaseLayer({in}, {}, name), param_(param) {
+    BaseLayer({in}, name), param_(param) {
     Check();
     auto s = in->GetShape();
     Dims dims = {};
@@ -51,7 +51,11 @@ class TransposeLayer : public BaseLayer {
     PushOutput(out);
   }
 
-  uint64_t EvaluateCycle() override {
+  uint64_t ForwardEvalCycle() override {
+    perf_.PrintInfo(name_);
+    return perf_.GetBottleneck();
+  }
+  uint64_t BackwardEvalCycle() override {
     return 0;
   }
 

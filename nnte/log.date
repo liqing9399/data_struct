@@ -1,4 +1,4 @@
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): mm_q
 cycles_mme: 75497600
 cycles_vme: 0
@@ -18,7 +18,7 @@ cycles_mte: 2359296
 cycles_compute: 75497600
 cycles_bottleneck: 75497600
 
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): mm_k
 cycles_mme: 75497600
 cycles_vme: 0
@@ -38,7 +38,7 @@ cycles_mte: 2359296
 cycles_compute: 75497600
 cycles_bottleneck: 75497600
 
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): mm_v
 cycles_mme: 75497600
 cycles_vme: 0
@@ -58,7 +58,7 @@ cycles_mte: 2359296
 cycles_compute: 75497600
 cycles_bottleneck: 75497600
 
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): bmm1
 cycles_mme: 12595200
 cycles_vme: 0
@@ -78,7 +78,7 @@ cycles_mte: 393216
 cycles_compute: 12595200
 cycles_bottleneck: 18874368
 
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): bmm2
 cycles_mme: 12595200
 cycles_vme: 0
@@ -98,7 +98,7 @@ cycles_mte: 393216
 cycles_compute: 12595200
 cycles_bottleneck: 18874368
 
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): mm3
 cycles_mme: 75497600
 cycles_vme: 0
@@ -118,7 +118,7 @@ cycles_mte: 2359296
 cycles_compute: 75497600
 cycles_bottleneck: 75497600
 
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): BinaryLayer
 cycles_mme: 0
 cycles_vme: 1185706
@@ -138,7 +138,7 @@ cycles_mte: 0
 cycles_compute: 1185706
 cycles_bottleneck: 3145728
 
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): ffn_1
 cycles_mme: 301990016
 cycles_vme: 0
@@ -158,7 +158,7 @@ cycles_mte: 9437184
 cycles_compute: 301990016
 cycles_bottleneck: 301990016
 
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): ffn_2
 cycles_mme: 301990016
 cycles_vme: 0
@@ -179,9 +179,9 @@ cycles_compute: 301990016
 cycles_bottleneck: 301990016
 
 time summary: 975321840(cycle) = 975.322(ms)
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/main.cpp +81 :ConstructTransfromerBlock(): single transformer block cycles: 975321840
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): mm_q
 cycles_mme: 75497600
 cycles_vme: 0
@@ -201,7 +201,7 @@ cycles_mte: 2359296
 cycles_compute: 75497600
 cycles_bottleneck: 75497600
 
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): mm_k
 cycles_mme: 75497600
 cycles_vme: 0
@@ -221,7 +221,7 @@ cycles_mte: 2359296
 cycles_compute: 75497600
 cycles_bottleneck: 75497600
 
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): mm_v
 cycles_mme: 75497600
 cycles_vme: 0
@@ -241,7 +241,7 @@ cycles_mte: 2359296
 cycles_compute: 75497600
 cycles_bottleneck: 75497600
 
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): bmm1
 cycles_mme: 12595200
 cycles_vme: 0
@@ -261,7 +261,7 @@ cycles_mte: 393216
 cycles_compute: 12595200
 cycles_bottleneck: 18874368
 
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): bmm2
 cycles_mme: 12595200
 cycles_vme: 0
@@ -281,7 +281,7 @@ cycles_mte: 393216
 cycles_compute: 12595200
 cycles_bottleneck: 18874368
 
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): mm3
 cycles_mme: 75497600
 cycles_vme: 0
@@ -301,7 +301,7 @@ cycles_mte: 2359296
 cycles_compute: 75497600
 cycles_bottleneck: 75497600
 
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): BinaryLayer
 cycles_mme: 0
 cycles_vme: 1185706
@@ -321,7 +321,7 @@ cycles_mte: 0
 cycles_compute: 1185706
 cycles_bottleneck: 3145728
 
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): ffn_1
 cycles_mme: 301990016
 cycles_vme: 0
@@ -341,7 +341,7 @@ cycles_mte: 9437184
 cycles_compute: 301990016
 cycles_bottleneck: 301990016
 
-Tue Jun  6 10:31:58 2023
+Tue Jun  6 10:54:51 2023
  file: /home/tao.li/workspace/nnte/./include/./common.h +305 :PrintInfo(): ffn_2
 cycles_mme: 301990016
 cycles_vme: 0

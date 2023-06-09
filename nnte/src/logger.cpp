@@ -3,7 +3,7 @@
 #author        : litao
 #e-mail        : Tao.Li@streamcomputing.com
 #create time   : 2023-05-29 15:52:48
-#last modified : 2023-06-05 20:15:15
+#last modified : 2023-06-07 16:02:08
 #description   : NA
 ***************************************************/
 
@@ -41,10 +41,12 @@ std::ostream& Logger::Start(LogRank log_rank,
   time(&tm);
   char time_string[128];
   ctime_r(&tm, time_string);
+  auto const pos = file.find_last_of('/');
+  const auto leaf = file.substr(pos+1);
   return GetStream(log_rank) << time_string
-                             << " file: "
-                             << file << " +"
-                             << line << " :"
+                             << "file: "
+                             << leaf << " :"
+                             << line << " "
                              << function << "(): ";
 }
 

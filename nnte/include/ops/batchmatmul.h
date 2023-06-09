@@ -3,7 +3,7 @@
 #author        : litao
 #e-mail        : Tao.Li@streamcomputing.com
 #create time   : 2023-06-05 17:25:15
-#last modified : 2023-06-06 10:31:39
+#last modified : 2023-06-08 11:32:40
 #description   : NA
 ***************************************************/
 #ifndef NNTE_INCLUDE_OPS_BATCHMATMUL_H_
@@ -60,7 +60,7 @@ class BatchMatmulLayer : public BaseLayer {
               Sptr<Tensor> bias,
               BatchMatmulParam param,
               std::string &name)
-      : BaseLayer({left, right}, {}, name), mm_param_(param) {
+      : BaseLayer({left, right}, name), mm_param_(param) {
     if (bias) PushInput(bias);
     Check();
 
@@ -147,24 +147,27 @@ class BatchMatmulLayer : public BaseLayer {
     }
   }
 
-  uint64_t EvaluateCycleV2() {
+  uint64_t ForwardEvalCycleV2() {
     int n = GetBatch();
     int lh = GetLh();
     int lw = GetLw();
     int rw = GetRw();
     perf_.cycles_mme = MmePerfEval(lh, lw, rw) * n;
-    perf_.cycles_gdram2l1 = TransDataPerfEval(n * lh, lw, SizeOf(GetInputs()[0]->GetDtype()), TransferChannel::GDRAM_L1);
-    perf_.cycles_gdram2llb = TransDataPerfEval(n * lw, rw, SizeOf(GetInputs()[1]->GetDtype()), TransferChannel::GDRAM_LLB);
-    perf_.cycles_llb2l1_b = TransDataPerfEval(n * lw, rw, SizeOf(GetInputs()[1]->GetDtype()), TransferChannel::LLB_L1_B);
-    perf_.cycles_l12gdram = TransDataPerfEval(n * lh, rw, SizeOf(GetOutputs()[0]->GetDtype()), TransferChannel::GDRAM_L1);
+    perf_.cycles_gdram2l1 = TransDataPerfEval(n * lh, lw, SizeOf(GetInput(0)->GetDtype()), TransferChannel::GDRAM_L1);
+    perf_.cycles_gdram2llb = TransDataPerfEval(n * lw, rw, SizeOf(GetInput(1)->GetDtype()), TransferChannel::GDRAM_LLB);
+    perf_.cycles_llb2l1_b = TransDataPerfEval(n * lw, rw, SizeOf(GetInput(1)->GetDtype()), TransferChannel::LLB_L1_B);
+    perf_.cycles_l12gdram = TransDataPerfEval(n * lh, rw, SizeOf(GetOutput(0)->GetDtype()), TransferChannel::GDRAM_L1);
     perf_.UpdateBottleneck();
     perf_.PrintInfo(name_);
     return perf_.GetBottleneck();
   }
 
-  uint64_t EvaluateCycle() override {
-    uint64_t cycles = EvaluateCycleV2();
+  uint64_t ForwardEvalCycle() override {
+    uint64_t cycles = ForwardEvalCycleV2();
     return cycles;
+  }
+  uint64_t BackwardEvalCycle() override {
+    return 0;
   }
 
 

@@ -1,0 +1,29 @@
+static ::pybind11::module_::module_def pybind11_module_def_emp __attribute__((__unused__)); 
+__attribute__((__unused__)) static void pybind11_init_emp(::pybind11::module_ &); 
+extern "C" __attribute__((__unused__)) __attribute__((visibility("default"))) PyObject *PyInit_emp(); 
+extern "C" __attribute__((visibility("default"))) PyObject *PyInit_emp() { 
+  {  
+    const char *compiled_ver = "3" "." "7";
+    const char *runtime_ver = Py_GetVersion();
+    size_t len = std::strlen(compiled_ver);
+    if (std::strncmp(runtime_ver, compiled_ver, len) != 0 || (runtime_ver[len] >= '0' && runtime_ver[len] <= '9')) {
+      PyErr_Format(PyExc_ImportError, "Python version mismatch: module was compiled for Python %s, " "but the interpreter version is incompatible: %s.", compiled_ver, runtime_ver);
+      return nullptr; 
+    } 
+  } 
+  pybind11::detail::get_internals(); 
+  auto m = ::pybind11::module_::create_extension_module( "emp", nullptr, &pybind11_module_def_emp);
+  try { 
+    pybind11_init_emp(m);
+    return m.ptr(); 
+  } 
+  catch (pybind11::error_already_set & e) {
+    pybind11::raise_from(e, PyExc_ImportError, "initialization failed");
+    return nullptr;
+  } 
+  catch (const std::exception &e) { 
+    PyErr_SetString(PyExc_ImportError, e.what());
+    return nullptr;
+  } 
+} 
+

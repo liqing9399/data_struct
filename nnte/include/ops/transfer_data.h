@@ -3,7 +3,7 @@
 #author        : litao
 #e-mail        : Tao.Li@streamcomputing.com
 #create time   : 2023-05-29 16:33:20
-#last modified : 2023-06-05 16:53:57
+#last modified : 2023-06-08 11:34:25
 #description   : NA
 ***************************************************/
 #ifndef NNTE_INCLUDE_OPS_TRANSFER_DATA_H_
@@ -29,21 +29,27 @@ class TransferDataLayer : public BaseLayer {
                     Sptr<Tensor> dst,
                     TransferChannel transfer_channel,
                     std::string &name)
-      : BaseLayer({src}, {dst}, name), transfer_channel_(transfer_channel) { }
+      : BaseLayer({src}, name), transfer_channel_(transfer_channel) {
+    PushOutput(dst);
+  }
 
   void Check() override {}
 
-  uint64_t EvaluateCycle() override {
+  uint64_t ForwardEvalCycle() override {
     auto ss= GetInputs()[0]->GetShape();
     auto ds= GetOutputs()[0]->GetShape();
     int sh = ss.GetExcludeLastDimCount();
-    int sw = ss.GetLastDimCount();
+    int sw = ss.GetLastDim();
     // int s_stride_w
     // int dh = ds.GetExcludeLastDimCount();
     // int dw = ds.GetLastDimCount();
-    uint64_t cycles = sh * sw / transfer_bandwidth[GetPlatform()][transfer_channel_];
-    LOG(E) << "TransferDataLayer use cycles: " << cycles;
-    return cycles;
+    perf_.cycles_gdram2gdram = TransDataPerfEval(sh, sw, (GetInput(0)->GetDataWidths()), transfer_channel_);
+    perf_.UpdateBottleneck();
+    perf_.PrintInfo(name_);
+    return perf_.GetBottleneck();
+  }
+  uint64_t BackwardEvalCycle() override {
+    return 0;
   }
 
  private:

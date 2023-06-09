@@ -1,8 +1,9 @@
 # Enforce some CMake policies
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.14)
 
 
 project(nnte)
+
 
 
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
@@ -38,12 +39,39 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -pthread -fPIC ")
 #set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${CMAKE_CXX_FLAGS} -o3")
 
 message("cmake__cxx_flags: ${CMAKE_CXX_FLAGS}\n")
-message("cmaek build type: ${CMAKE_BUILD_TYPE}\n")
+message("cmake build type: ${CMAKE_BUILD_TYPE}\n")
 
 #SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)       #设置可执行文件的输出目录
 SET(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build/lib)    #设置库文件的输出目录
 
 # cmake -DCMAKE_INSTALL_PREFIX=/usr .. 运行时指定install位置
+
+
+include(FetchContent)
+FetchContent_Declare(gtest
+  GIT_REPOSITORY https://github.com/google/googletest
+  GIT_TAG release-1.11.0)
+
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(gtest)
+
+set(UNIT_TESTS "Build the unit tests" OFF)
+if(UNIT_TESTS)
+  aux_source_directory(${CMAKE_SOURCE_DIR}/tests/* UNIT_TESTS)
+  add_executable(op_test ${CMAKE_SOURCE_DIR}/tests/test_embedding.cpp)
+  #target_sources(op_test
+  #	PRIVATE
+  #  tests/test.cpp
+  #)
+
+  target_link_libraries(op_test nnte gtest_main)
+
+  enable_testing()
+  add_test(
+    	NAME google_test
+    	COMMAND $<TARGET_FILE:op_test>
+   )
+endif()
 
 
 add_executable(evalt main.cpp)

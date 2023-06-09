@@ -3,7 +3,7 @@
 #author        : litao
 #e-mail        : Tao.Li@streamcomputing.com
 #create time   : 2023-06-01 15:01:34
-#last modified : 2023-06-05 16:53:52
+#last modified : 2023-06-08 11:33:42
 #description   : NA
 ***************************************************/
 #ifndef NNTE_INCLUDE_OPS_RESHAPE_
@@ -23,7 +23,7 @@ class ReshapeLayer : public BaseLayer {
   }
 
   ReshapeLayer(Sptr<Tensor> in, Dims dims, std::string &name) :
-    BaseLayer({in}, {}, name), dims_(dims) {
+    BaseLayer({in}, name), dims_(dims) {
     Check();
     Shape s = {dims, in->GetShape().GetLayout()};
     auto out = Tensor::Create(s, in->GetDtype(), OpOutName(name));
@@ -43,7 +43,11 @@ class ReshapeLayer : public BaseLayer {
     }
   }
 
-  uint64_t EvaluateCycle() override {
+  uint64_t ForwardEvalCycle() override {
+    perf_.PrintInfo(name_);
+    return perf_.GetBottleneck();
+  }
+  uint64_t BackwardEvalCycle() override {
     return 0;
   }
 

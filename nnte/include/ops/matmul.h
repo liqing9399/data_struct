@@ -3,7 +3,7 @@
 #author        : litao
 #e-mail        : Tao.Li@streamcomputing.com
 #create time   : 2023-06-01 14:47:36
-#last modified : 2023-06-05 20:30:55
+#last modified : 2023-06-08 14:33:56
 #description   : NA
 ***************************************************/
 #ifndef NNTE_INCLUDE_OPS_MATMUL_H_
@@ -21,7 +21,7 @@ namespace nnte {
 class MatmulParam : public BaseParam {
  public:
   MatmulParam() : active_(ActiveMode::AM_NONE) {};
-  MatmulParam(ActivationMode am) : active_(am) {};
+  explicit MatmulParam(ActivationMode am) : active_(am) {};
   MatmulParam(const MatmulParam &p) : active_(p.active_) {};
   MatmulParam &operator=(const MatmulParam &rhs) {
     this->active_ = rhs.active_;
@@ -52,7 +52,7 @@ class MatmulLayer : public BaseLayer {
               Sptr<Tensor> bias,
               MatmulParam param,
               std::string &name)
-      : BaseLayer({left, right}, {}, name), mm_param_(param) {
+      : BaseLayer({left, right}, name), mm_param_(param) {
     if (bias) PushInput(bias);
     Check();
 
@@ -74,7 +74,7 @@ class MatmulLayer : public BaseLayer {
       PVSTR(infos_, dims_w);
       throw name_ + " error!";
     }
-    lw = GetInputs()[0]->GetShape().GetDim(Axis::DIMW);
+    lw = GetInputs()[0]->GetShape().GetLastDim();
     rh = GetInputs()[1]->GetShape().GetDim(Axis::DIMH);
     rw = GetInputs()[1]->GetShape().GetDim(Axis::DIMW);
     bool is_matched = 1;
@@ -100,31 +100,46 @@ class MatmulLayer : public BaseLayer {
     }
   }
 
-  uint64_t EvaluateCycleV2() {
-    int lh = GetInputs()[0]->GetShape().GetDim(Axis::DIMH);
-    int lw = GetInputs()[0]->GetShape().GetDim(Axis::DIMW);
+  uint64_t ForwardEvalCycle() override {
+    int lh = GetInputs()[0]->GetShape().GetExcludeLastDimCount();
+    int lw = GetInputs()[0]->GetShape().GetLastDim();
     int rw = GetInputs()[1]->GetShape().GetDim(Axis::DIMW);
-    perf_.cycles_mme = MmePerfEval(lh, lw, rw);
-    perf_.cycles_gdram2l1 = (uint64_t)(lh * lw * SizeOf(GetInputs()[0]->GetDtype()))
-                            / transfer_bandwidth[GetPlatform()][TransferChannel::GDRAM_L1];
-    perf_.cycles_gdram2llb = (uint64_t)(lw * rw * SizeOf(GetInputs()[1]->GetDtype()))
-                            / transfer_bandwidth[GetPlatform()][TransferChannel::GDRAM_LLB];
-    perf_.cycles_llb2l1_b = (uint64_t)(lw * rw * SizeOf(GetInputs()[1]->GetDtype()))
-                            / transfer_bandwidth[GetPlatform()][TransferChannel::LLB_L1_B];
-    perf_.cycles_l12gdram = (uint64_t)(lh * rw * SizeOf(GetOutputs()[0]->GetDtype()))
-                            / transfer_bandwidth[GetPlatform()][TransferChannel::GDRAM_L1];
-    perf_.UpdateBottleneck();
-    perf_.PrintInfo(name_);
+    MatmulEval(lh, lw, rw, perf_);
     return perf_.GetBottleneck();
   }
 
-  uint64_t EvaluateCycle() override {
-    uint64_t cycles = EvaluateCycleV2();
-    return cycles;
+  void MatmulEval(int lh, int lw, int rw, CycleCounter &perf) {
+    perf.cycles_mme = MmePerfEval(lh, lw, rw);
+    perf.cycles_gdram2l1 = TransDataPerfEval(lh, lw, (GetInput(0)->GetDataWidths()), TransferChannel::GDRAM_L1);
+    perf.cycles_gdram2llb = TransDataPerfEval(lw, rw, (GetInput(1)->GetDataWidths()), TransferChannel::GDRAM_LLB);
+    perf.cycles_llb2l1_b = TransDataPerfEval(lw, rw, (GetInput(1)->GetDataWidths()), TransferChannel::LLB_L1_B);
+    perf.cycles_l12gdram = TransDataPerfEval(lh, rw, (GetOutput(0)->GetDataWidths()), TransferChannel::GDRAM_L1);
+    perf.UpdateBottleneck();
+    perf.PrintInfo(name_);
+  }
+  uint64_t BackwardEvalCycle() override {
+    int flh = GetInputs()[0]->GetShape().GetExcludeLastDimCount();
+    int flw = GetInputs()[0]->GetShape().GetLastDim();
+    int frw = GetInputs()[1]->GetShape().GetDim(Axis::DIMW);
+    // fwd: (lh, lw) & (lw, rw) -> (lh, rw)
+    // bwd: intm (lh, rw) & (rw, lw) -> (lh, lw)
+    //     weight(lw, lh & (lh, rw) -> (lw, rw)
+    int bwlh = flw;
+    int bwlw = flh;
+    int bwrw = frw;
+    MatmulEval(bwlh, bwlw, bwrw, dw_perf_);
+    int bxlh = flh;
+    int bxlw = frw;
+    int bxrw = flw;
+    MatmulEval(bxlh, bxlw, bxrw, dx_perf_);
+    bwd_perf_ = dx_perf_ + dw_perf_;
+    return bwd_perf_.GetBottleneck();
   }
 
   // workspace size, the operation needs extra DDR memory
   MatmulParam mm_param_;
+  CycleCounter dw_perf_;
+  CycleCounter dx_perf_;
 };
 
 }

@@ -3,13 +3,13 @@
 #author        : litao
 #e-mail        : Tao.Li@streamcomputing.com
 #create time   : 2023-06-05 14:46:07
-#last modified : 2023-06-05 20:33:32
+#last modified : 2023-06-07 15:34:24
 ####################################################
 #!/bin/bash
 
 use_gdb=0
 
-while getopts "d" arg #选项后面的冒号表示该选项需要参数
+while getopts "v:d" arg #选项后面的冒号表示该选项需要参数
 do
         case $arg in
              d)
@@ -27,9 +27,9 @@ done
 
 if (( $use_gdb ))
 then
-  echo "use gdb"
-  gdb ./build/evalt
+  echo "use gdb: $2 $3"
+  gdb --args ./build/evalt $2 $3
 else
-  echo "normal run"
-  ./build/evalt | tee log.date
+  echo "normal run: $1 $2"
+  ./build/evalt $1 $2 | tee log.date.$1.$2
 fi

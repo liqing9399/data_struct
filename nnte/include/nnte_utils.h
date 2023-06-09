@@ -3,7 +3,7 @@
 #author        : litao
 #e-mail        : Tao.Li@streamcomputing.com
 #create time   : 2023-05-26 15:07:23
-#last modified : 2023-06-05 16:43:12
+#last modified : 2023-06-08 10:36:56
 #description   : NA
 ***************************************************/
 
@@ -38,6 +38,10 @@ int inline ceil_2x(int x, int base) {
 std::string OpOutName(std::string &op_name, int index = 0) {
   return op_name + "_out_" + std::to_string(index);
 }
+
+double inline cycle2ms(uint64_t cycles) {
+  return (double)cycles / 1000 / 1000;
+};
 
 // 定义可以处理变长参数的宏
 // #define DEF_ENUM(enum_name, num, ...)
