@@ -1,0 +1,65 @@
+2022-10-06 08:16:14.752820: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2022-10-06 08:16:14.913085: I tensorflow/core/tpu/tpu_initializer_helper.cc:262] Libtpu path is: libtpu.so
+I1006 08:16:14.972813975   10477 ev_epoll1_linux.cc:121]     grpc epoll fd: 7
+D1006 08:16:14.972839980   10477 ev_posix.cc:141]            Using polling engine: epoll1
+D1006 08:16:14.972873809   10477 lb_policy_registry.cc:43]   registering LB policy factory for "grpclb"
+D1006 08:16:14.972887805   10477 lb_policy_registry.cc:43]   registering LB policy factory for "rls_experimental"
+D1006 08:16:14.972900444   10477 lb_policy_registry.cc:43]   registering LB policy factory for "priority_experimental"
+D1006 08:16:14.972910890   10477 lb_policy_registry.cc:43]   registering LB policy factory for "weighted_target_experimental"
+D1006 08:16:14.972917678   10477 lb_policy_registry.cc:43]   registering LB policy factory for "pick_first"
+D1006 08:16:14.972924009   10477 lb_policy_registry.cc:43]   registering LB policy factory for "round_robin"
+D1006 08:16:14.972934673   10477 lb_policy_registry.cc:43]   registering LB policy factory for "ring_hash_experimental"
+D1006 08:16:14.972944585   10477 dns_resolver_ares.cc:831]   Using ares dns resolver
+D1006 08:16:14.972970585   10477 certificate_provider_registry.cc:39] registering certificate provider factory for "file_watcher"
+D1006 08:16:14.972982496   10477 lb_policy_registry.cc:43]   registering LB policy factory for "cds_experimental"
+D1006 08:16:14.972989927   10477 lb_policy_registry.cc:43]   registering LB policy factory for "xds_cluster_impl_experimental"
+D1006 08:16:14.973010623   10477 lb_policy_registry.cc:43]   registering LB policy factory for "xds_cluster_resolver_experimental"
+D1006 08:16:14.973015646   10477 lb_policy_registry.cc:43]   registering LB policy factory for "xds_cluster_manager_experimental"
+Tensorflow version 2.10.0
+2022-10-06 08:16:16.593527: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2022-10-06 08:16:19.760632: I tensorflow/compiler/xla/service/service.cc:173] XLA service 0x31e1380 initialized for platform TPU (this does not guarantee that XLA will be used). Devices:
+2022-10-06 08:16:19.760675: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (0): TPU, 2a886c8
+2022-10-06 08:16:19.760683: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (1): TPU, 2a886c8
+2022-10-06 08:16:19.760690: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (2): TPU, 2a886c8
+2022-10-06 08:16:19.760697: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (3): TPU, 2a886c8
+2022-10-06 08:16:19.760703: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (4): TPU, 2a886c8
+2022-10-06 08:16:19.760710: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (5): TPU, 2a886c8
+2022-10-06 08:16:19.760717: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (6): TPU, 2a886c8
+2022-10-06 08:16:19.760724: I tensorflow/compiler/xla/service/service.cc:181]   StreamExecutor device (7): TPU, 2a886c8
+2022-10-06 08:16:26.775130: I tensorflow/core/tpu/graph_rewrite/encapsulate_tpu_computations_pass.cc:237] Subgraph fingerprint:13620006421929149352
+2022-10-06 08:16:26.794758: I tensorflow/core/tpu/kernels/tpu_compilation_cache_interface.cc:437] TPU host compilation cache miss: cache_key(1071692525721884846), session_name()
+2022-10-06 08:16:26.943130: I tensorflow/core/tpu/kernels/tpu_compile_op_common.cc:210] Compilation of 1071692525721884846 with session name  took 148.252054ms and succeeded
+2022-10-06 08:16:26.944871: I tensorflow/core/tpu/kernels/tpu_compilation_cache_interface.cc:470] TPU host compilation cache: compilation complete for cache_key(1071692525721884846), session_name(), subgraph_key(std::string(property.function_name) = "cluster_tpu_function_13620006421929149352", property.function_library_fingerprint = 3029647562484788375, property.mlir_module_fingerprint = 0, property.num_replicas = 8, topology.chip_bounds().x = 2, topology.chip_bounds().y = 2, topology.chip_bounds().z = 1, topology.wrap().x = false, topology.wrap().y = false, topology.wrap().z = false, topology.MissingChipCount() = 0, std::string(property.shapes_prefix) = "", property.guaranteed_constants_size = 0, embedding_partitions_fingerprint = "1688352644216761960")
+2022-10-06 08:16:26.944917: I tensorflow/core/tpu/kernels/tpu_compilation_cache_interface.cc:536] After adding entry for key 1071692525721884846 with session_name  cache is 1 entries (76902 bytes),  marked for eviction 0 entries (0 bytes).
+PerReplica:{
+  0: tf.Tensor(10.0, shape=(), dtype=float32),
+  1: tf.Tensor(10.0, shape=(), dtype=float32),
+  2: tf.Tensor(10.0, shape=(), dtype=float32),
+  3: tf.Tensor(10.0, shape=(), dtype=float32),
+  4: tf.Tensor(10.0, shape=(), dtype=float32),
+  5: tf.Tensor(10.0, shape=(), dtype=float32),
+  6: tf.Tensor(10.0, shape=(), dtype=float32),
+  7: tf.Tensor(10.0, shape=(), dtype=float32)
+}
+D1006 08:16:27.209655917   10477 init.cc:213]                grpc_shutdown starts clean-up now
+liqing9399@t1v-n-110e9d60-w-0:~$ cat test.py
+import tensorflow as tf
+print("Tensorflow version " + tf.__version__)
+
+@tf.function
+def add_fn(x,y):
+    l = x + y
+    t = x + y + 1
+    z = (l + t)*2
+    return z
+
+cluster_resolver = tf.distribute.cluster_resolver.TPUClusterResolver()
+tf.config.experimental_connect_to_cluster(cluster_resolver)
+tf.tpu.experimental.initialize_tpu_system(cluster_resolver)
+strategy = tf.distribute.TPUStrategy(cluster_resolver)
+x = tf.constant(1.)
+y = tf.constant(1.)
+z = strategy.run(add_fn, args=(x,y))
+print(z)
