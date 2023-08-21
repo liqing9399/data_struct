@@ -1,3 +1,11 @@
+/***************************************************
+#filename      : common.h
+#author        : litao
+#e-mail        : Tao.Li@streamcomputing.com
+#create time   : 2023-06-19 15:50:45
+#last modified : 2023-06-19 15:50:52
+#description   : NA
+***************************************************/
 #ifndef DT_COMMON_HPP_
 #define DT_COMMON_HPP_
 
@@ -13,25 +21,6 @@
 #include <set>
 #include <map>
 
-#define BLACKCOLOR                 "\033[0;30m"
-#define L_BLACKCOLOR               "\033[1;30m"
-#define REDCOLOR                   "\033[0;31m"
-#define L_REDCOLOR                 "\033[1;31m"
-#define GREENCOLOR                 "\033[0;32m"
-#define L_GREENCOLOR               "\033[1;32m"
-#define BROWNCOLOR                 "\033[0;33m"
-#define YELLOWCOLOR                "\033[1;33m"
-#define BLUECOLOR                  "\033[0;34m"
-#define L_BLUECOLOR                "\033[1;34m"
-#define PURPLECOLOR                "\033[0;35m"
-#define L_PURPLECOLOR              "\033[1;35m"
-#define CYANCOLOR                  "\033[0;36m"
-#define L_CYANCOLOR                "\033[1;36m"
-#define GRAYCOLOR                  "\033[0;37m"
-#define WHITECOLOR                 "\033[1;37m"
-
-#define COLOREND                   "\033[0m"
-
 #define LOG_INFO                  "[info:]"
 #define LOG_DEBUG                 "[debug:]"
 #define LOG_WARNNING              "[warning:]"
@@ -39,14 +28,14 @@
 #define LOG_FATAL                 "[fatal:]"
 
 // #ifdef LOG
-  // fprintf(stdout, GREENCOLOR, LOG_INFO, COLOREND, ##__VA_ARGS__); 
+  // fprintf(stdout, GREENCOLOR, LOG_INFO, COLOREND, ##__VA_ARGS__);
 #define LOGI(...) do { \
   flockfile (stdout); \
   fprintf(stdout, ##__VA_ARGS__); \
   funlockfile(stdout); \
 } while(0)
 
-  // fprintf(stdout, REDCOLOR, LOG_ERROR, COLOREND, ##__VA_ARGS__); 
+  // fprintf(stdout, REDCOLOR, LOG_ERROR, COLOREND, ##__VA_ARGS__);
 #define LOGE(...) do { \
   flockfile(stdout); \
   fprintf(stdout, ##__VA_ARGS__); \
